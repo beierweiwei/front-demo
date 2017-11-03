@@ -1,152 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>打印demo</title>
-	<link rel="stylesheet" type="text/css" href="./print-demo.css">
-	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
-	<style type="text/css">
-		.btn-print {width: 60px; background: green; color: #fff; font-size: 22px}
-	</style>
+  <meta charset="UTF-8">
+  <title>打印demo</title>
+  <link rel="stylesheet" type="text/css" href="./print-demo.css">
+  <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+  <style type="text/css">
+  .btn-print {
+    width: 60px;
+    background: green;
+    color: #fff;
+    font-size: 22px
+  }
+  </style>
 </head>
 
 <body>
-	<div id="print-container">
-		<iframe  id="print-page" height="0" width="0"></iframe>
-	</div>
-	<div><button id="btn-print" class="btn-print">打印</button></div>
+  <div id="print-container">
+    <iframe id="print-page" height="0" width="0"></iframe>
+  </div>
+  <div>
+    <button id="btn-print" class="btn-print">打印</button>
+  </div>
 </body>
-
 <!-- 商品表格头部 -->
 <script type="text/html" id="tab-prod-list-head">
-	<thead>					
-		<tr>
-			<th width="5%">序列</th>
-			<th width="10%">图片</th>
-			<th width="30%">品名</th>
-			<th width="20%">型号</th>
-			<th width="10%">数量</th>
-			<th width="10%">单价</th>
-			<th width="10%">全额</th>
-		</tr>
-	</thead>
+  <thead>
+    <tr>
+      <th width="5%">序列</th>
+      <th width="10%">图片</th>
+      <th width="30%">品名</th>
+      <th width="20%">型号</th>
+      <th width="10%">数量</th>
+      <th width="10%">单价</th>
+      <th width="10%">全额</th>
+    </tr>
+  </thead>
 </script>
 <!-- 商品列表模板 -->
 <script type="text/html" id="tab-prod-list-body">
-	<tr>
-		<td>{{idx}}</td>
-		<td><img src="{{imgUrl}}"></td>
-		<td>{{title}}</td>
-		<td>{{type}}</td>
-		<td>{{num}}</td>
-		<td>{{price}}</td>
-		<td>{{count}}</td>
-	</tr>
+  <tr>
+    <td>{{idx}}</td>
+    <td><img src="{{imgUrl}}"></td>
+    <td>{{title}}</td>
+    <td>{{type}}</td>
+    <td>{{num}}</td>
+    <td>{{price}}</td>
+    <td>{{count}}</td>
+  </tr>
 </script>
-
 <script type="text/javascript">
-	var moco = {				
-		prodList:[
-			{
-				imgUrl: "./images/demo1.jpg",
-				title: "辛苦了是的福ddddds手动阀实打实大苏打实打实大苏打实打实的手动阀手动阀手动阀士大夫似的建省",
-				type: "xl blue",
-				num: "4",
-				price: "20",
-				count: "80"
-			},
-			{
-				imgUrl: "./images/demo1.jpg",
-				title: "辛苦了是的福ddddds手动阀实打实大苏打实打实大苏打实打实的手动阀手动阀手动阀士大夫似的建省",
-				type: "xl blue",
-				num: "4",
-				price: "20",
-				count: "80"
-			},
-			{
-				imgUrl: "./images/demo1.jpg",
-				title: "辛苦了是的福ddddds手动阀实打实大苏打实打实大苏打实打实的手动阀手动阀手动阀士大夫似的建省",
-				type: "xl blue",
-				num: "4",
-				price: "20",
-				count: "80"
-			},
-		]
-	};
-	function tplRender(tpl, data){
-		var render_str = "";
-		if(Object.prototype.toString.call(data) === '[object Array]') {
-			var i = 0, len = data.length;
-			for(;i < len; i++) {
-				var item = data[i];
-				render_str += tpl.replace(/{{(.*?)}}/g,function(all ,targt){
-						return targt == 'idx' ?  i+1 : data[i][targt]|| '';
-				});
-			}
-			return render_str
-		}else {
-			return render_str = tpl.replace(/{{(.*?)}}/g,function(all ,targt){
-					return data[targt]
-			});
+var moco = {
+  prodList: [{
+      imgUrl: "./images/demo1.jpg",
+      title: "辛苦了是的福ddddds手动阀实打实大苏打实打实大苏打实打实的手动阀手动阀手动阀士大夫似的建省",
+      type: "xl blue",
+      num: "4",
+      price: "20",
+      count: "80"
+    },
+    {
+      imgUrl: "./images/demo1.jpg",
+      title: "辛苦了是的福ddddds手动阀实打实大苏打实打实大苏打实打实的手动阀手动阀手动阀士大夫似的建省",
+      type: "xl blue",
+      num: "4",
+      price: "20",
+      count: "80"
+    },
+    {
+      imgUrl: "./images/demo1.jpg",
+      title: "辛苦了是的福ddddds手动阀实打实大苏打实打实大苏打实打实的手动阀手动阀手动阀士大夫似的建省",
+      type: "xl blue",
+      num: "4",
+      price: "20",
+      count: "80"
+    },
+  ]
+};
 
-		}
-	}
-	function getIframWindow(id){
-		return document.getElementById(id).contentWindow
-	}
-	function print_page(ifram_id) {
-    if (!!window.ActiveXObject || "ActiveXObject" in window) {
-      window.frames[ifram_id].focus();
-      print();
+function tplRender(tpl, data) {
+  var render_str = "";
+  if (Object.prototype.toString.call(data) === '[object Array]') {
+    var i = 0,
+      len = data.length;
+    for (; i < len; i++) {
+      var item = data[i];
+      render_str += tpl.replace(/{{(.*?)}}/g, function(all, targt) {
+        return targt == 'idx' ? i + 1 : data[i][targt] || '';
+      });
     }
-    else {
-	    document.getElementById(ifram_id).focus();
-	    document.getElementById(ifram_id).contentWindow.print();
-    }
-	}
+    return render_str
+  } else {
+    return render_str = tpl.replace(/{{(.*?)}}/g, function(all, targt) {
+      return data[targt]
+    });
+  }
+}
 
-	function createPrintPage(){
+function getIframWindow(id) {
+  return document.getElementById(id).contentWindow
+}
 
-		//拼接domstring,生成print页面
-		var print_window = getIframWindow('print-page');
+function print_page(ifram_id) {
+  if (!!window.ActiveXObject || "ActiveXObject" in window) {
+    window.frames[ifram_id].focus();
+    print();
+  } else {
+    document.getElementById(ifram_id).focus();
+    document.getElementById(ifram_id).contentWindow.print();
+  }
+}
 
-		var print_doc = $(print_window.document);
-		var tpl_prod_list = $('#tab-prod-list-body').html();
-		var prodList = moco.prodList;
-		var render_toatal = '<div class="container-print" id="container-print">';
-	
-		//商品列表
-		render_toatal += '<table class="tab-prod-list">'
-		render_toatal += tplRender(tpl_prod_list, prodList);
-		render_toatal+= '</table>';
+function createPrintPage() {
 
-		render_toatal += '</div>';
-		//生成打印页面dom
-		var render_dom = $(render_toatal);
-		
-		print_doc.find('body').html('').append(render_dom);
-		print_doc.find('head').append($('<link rel="stylesheet" type="text/css" href="./print-demo.css">'))
-		var load_count = 0;
-		print_doc.find('img')
-		.on('load', function() {
-			load_count++
-			//图片加载完毕，开始打印
-			if(load_count === render_dom.find('img').length) {
-				print_window.print();
-			}
-		})
-		.on('error', function() {
-			load_count++
-			//图片加载完毕，开始打印
-			if(load_count === render_dom.find('img').length) {
-				print_window.print();
-			}
-		})	
-	}
-	$(function(){
-		$('#btn-print').click(function(){
-			createPrintPage();
-		})
-	})
+  //拼接domstring,生成print页面
+  var print_window = getIframWindow('print-page');
+
+  var print_doc = $(print_window.document);
+  var tpl_prod_list = $('#tab-prod-list-body').html();
+  var prodList = moco.prodList;
+  var render_toatal = '<div class="container-print" id="container-print">';
+
+  //商品列表
+  render_toatal += '<table class="tab-prod-list">'
+  render_toatal += tplRender(tpl_prod_list, prodList);
+  render_toatal += '</table>';
+
+  render_toatal += '</div>';
+  //生成打印页面dom
+  var render_dom = $(render_toatal);
+
+  print_doc.find('body').html('').append(render_dom);
+  print_doc.find('head').append($('<link rel="stylesheet" type="text/css" href="./print-demo.css">'))
+  var load_count = 0;
+  print_doc.find('img')
+    .on('load', function() {
+      load_count++
+      //图片加载完毕，开始打印
+      if (load_count === render_dom.find('img').length) {
+        print_window.print();
+      }
+    })
+    .on('error', function() {
+      load_count++
+      //图片加载完毕，开始打印
+      if (load_count === render_dom.find('img').length) {
+        print_window.print();
+      }
+    })
+}
+$(function() {
+  $('#btn-print').click(function() {
+    createPrintPage();
+  })
+})
 </script>
+
 </html>
